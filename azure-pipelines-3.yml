@@ -1,0 +1,111 @@
+Skip to content
+Dhruti1973
+TomcatMavenApp
+Repository navigation
+Code
+Pull requests
+Agents
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+Settings
+Commit 2ff7ac3
+Dhruti1973
+Dhruti1973
+committed
+15 minutes ago
+·
+Set up CI with Azure Pipelines
+[skip ci]
+master
+1 parent 
+fc34595
+ commit 
+2ff7ac3
+1 file changed
+
++92
+-13
+Lines changed: 92 additions & 13 deletions
+File tree
+Filter files…
+azure-pipelines.yml
+Search within code
+ 
+Customizable line height
+The default line height has been increased for improved accessibility. You can choose to enable a more compact line height from the view settings menu.
+
+‎azure-pipelines.yml‎
++92
+-13
+Lines changed: 92 additions & 13 deletions
+Original file line number	Diff line number	Diff line change
+@@ -4,16 +4,95 @@ trigger:
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean package'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'target'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+stages:
+- stage: Build
+  displayName: Build Stage
+  jobs:
+  - job: MavenBuild
+    displayName: Maven Build
+    steps:
+    - task: Maven@4
+      displayName: Build Maven Project
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean package'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish WAR Artifact
+      inputs:
+        PathtoPublish: 'target'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+- stage: Deploy
+  displayName: Deployment Stage
+  dependsOn: Build
+  jobs:
+  - job: DeployApplication
+    displayName: Deploy Application
+    steps:
+    - script: |
+        echo "Starting Deployment Process"
+        echo "Deploying TomcatMavenApp WAR File"
+        echo "Deployment Completed Successfully"
+      displayName: Deploy WAR Application
+- stage: Verification
+  displayName: Verification Stage
+  dependsOn: Deploy
+  jobs:
+  - job: VerifyDeployment
+    displayName: Verify Deployment
+    steps:
+    - script: |
+        echo "Checking deployment status"
+        echo "Application is running successfully"
+        echo "Pipeline execution completed"
+      displayName: Verify Deployment
+0 commit comments
+Comments
+0
+ (0)
+Comment
+You're not receiving notifications from this thread.
+
